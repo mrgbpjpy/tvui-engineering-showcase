@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
+import { selectGame } from "../store/screenSlice";
 import { setFocusedGame } from "../store/uiSlice";
 import { GameCard } from "./GameCard";
 
@@ -19,11 +20,15 @@ export function GameRow() {
       if (e.key === "ArrowLeft" && index > 0) {
         dispatch(setFocusedGame(games[index - 1].id));
       }
+
+      if (e.key === "Enter" && focusedGameId) {
+        dispatch(selectGame(focusedGameId));
+      }
     };
 
     window.addEventListener("keydown", handleKey);
     return () => window.removeEventListener("keydown", handleKey);
-  }, [games, focusedGameId, dispatch]);
+  }, [dispatch, games, focusedGameId]);
 
   return (
     <div className="game-row">
@@ -31,9 +36,9 @@ export function GameRow() {
         <GameCard
           key={game.id}
           game={game}
-          focused={game.id === focusedGameId}
-          onSelect={() => dispatch(setFocusedGame(game.id))}
-        />
+          focused={game.id === focusedGameId} onSelect={function (): void {
+            throw new Error("Function not implemented.");
+          } }        />
       ))}
     </div>
   );
