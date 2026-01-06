@@ -1,73 +1,87 @@
-# React + TypeScript + Vite
+# TV UI Engineering Showcase
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A production-style TV UI engineering project demonstrating core interaction
+patterns used in large-scale, 10-foot streaming applications.
 
-Currently, two official plugins are available:
+This repository focuses on deterministic focus management, remote input handling,
+and interaction architecture for TV platforms, built with scalability and
+maintainability in mind.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## React Compiler
+## Purpose
 
-The React Compiler is currently not compatible with SWC. See [this issue](https://github.com/vitejs/vite-plugin-react/issues/428) for tracking the progress.
+This project is intentionally **not** a visual clone of any streaming product.
 
-## Expanding the ESLint configuration
+Instead, it demonstrates **engineering decisions** and **interaction patterns**
+that matter in real-world TV applications, including:
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- Predictable focus movement
+- Remote-first input handling
+- Explicit interaction loops
+- Clear separation of UI, state, and navigation logic
+- Patterns that scale across screens and features
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+---
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+## Core Engineering Concepts
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+### Deterministic Focus Management
+Explicit, predictable focus behavior designed for directional input
+(Up / Down / Left / Right) rather than mouse or touch.
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### Remote Input Handling
+Keyboard and remote keys mapped to intent-based actions with a complete
+interaction loop (Navigate → Select → Act → Feedback).
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+### Interaction Architecture
+Clear separation between presentation, navigation, and state management
+to ensure scalability and maintainability.
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+### 10-Foot UI Constraints
+Designed for large displays with readable typography, visible focus states,
+and intentional motion.
+
+---
+
+## Tech Stack
+
+- React
+- TypeScript
+- Vite
+- CSS (explicit transitions)
+
+---
+
+## Project Structure
+
+src/
+  components/      Reusable UI components  
+  navigation/      Focus and navigation logic  
+  input/           Remote / keyboard input handling  
+  state/           Interaction and navigation state  
+  screens/         Screen-level composition  
+
+---
+
+## How to Run
+
+npm install  
+npm run dev  
+
+Use keyboard arrow keys to simulate remote navigation.
+
+---
+
+## Notes for Reviewers
+
+This repository emphasizes interaction architecture and focus predictability.
+Key files are kept intentionally readable to highlight decision-making and tradeoffs.
+
+---
+
+## Author
+
+Erick Esquilin  
+Senior Software Engineer  
+TV UI Engineering & Interaction Systems
