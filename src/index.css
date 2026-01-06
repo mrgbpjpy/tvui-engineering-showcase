@@ -1,0 +1,23 @@
+/* Global reset for TV UI */
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+}
+
+body {
+  background-color: #141414;
+  color: #ffffff;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+
+  /* IMPORTANT: no flex, no centering */
+  overflow-x: hidden;
+}
