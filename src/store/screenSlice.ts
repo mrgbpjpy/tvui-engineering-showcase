@@ -1,6 +1,6 @@
 import {createSlice, type PayloadAction} from '@reduxjs/toolkit';
 
-export type Screen = "START_MENU" | "BROWSE" | "CONFIRM_START" | "OPTIONS"
+export type Screen = "START_MENU" | "BROWSE" | "CONFIRM_START" | "PLAYING";
 
 interface ScreenState {
   current: Screen;
@@ -28,8 +28,9 @@ const screenSlice = createSlice({
       state.current = "START_MENU";
       state.selectedGameId = null;
     },
-    goToOptions(state) {
-      state.current = "OPTIONS";
+    goToStartGame(state) {
+      if(!state.selectedGameId) return;
+      state.current = "PLAYING";
     },
   },
 });
@@ -39,7 +40,7 @@ export const {
   goToBrowse,
   selectGame,
   goToStartMenu,
-  goToOptions,
+  goToStartGame,
 } = screenSlice.actions;
 
 export default screenSlice.reducer;

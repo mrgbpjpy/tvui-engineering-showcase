@@ -13,17 +13,17 @@ interface GamesState {
 const initialState: GamesState = {
   games: [
     {
-      id: "game-1",
+      id: "space-runner",
       title: "Space Runner",
       thumbnail: "/images/game-1.jpg",
     },
     {
-      id: "game-2",
+      id: "dungeon-quest",
       title: "Dungeon Quest",
       thumbnail: "/images/game-2.jpg",
     },
     {
-      id: "game-3",
+      id: "cyber-arena",
       title: "Cyber Arena",
       thumbnail: "/images/game-3.jpg",
     },
