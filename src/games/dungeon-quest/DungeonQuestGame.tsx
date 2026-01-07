@@ -1,12 +1,55 @@
+import { useState, useEffect } from "react";
+import mainStart from "./assets/main_start.png";
+// import { DungeonQuestWorld } from "./DungeonQuestWorld";
 
+type GamePhase = "INTRO" | "PLAYING";
 
 export function DungeonQuestGame() {
+  const [phase, setPhase] = useState<GamePhase>("INTRO");
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Enter") {
+        setPhase("PLAYING");
+      }
+    };
+
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, []);
+
+  // --- INTRO SCREEN ---
+  if (phase === "INTRO") {
+    return (
+      <div
+        style={{
+          position: "absolute",
+          inset: 0,
+          backgroundImage: `url(${mainStart})`,
+          backgroundRepeat: "no-repeat",
+          backgroundPosition: "center",
+          backgroundSize: "contain",
+          backgroundColor: "#000", // letterbox color
+        }}
+      />
+    );
+  }
+
+  // --- GAMEPLAY ---
   return (
-    <div>
-        <h2>Dungeon Quest</h2>
-        <p> Game Running...</p>
-        <p>Welcome to Dungeon Quest! Embark on an epic adventure through treacherous dungeons filled with monsters, traps, and hidden treasures. Choose your hero, gather your party, and prepare for battle as you quest to defeat the evil overlord threatening the realm.</p>
-        <p>Use your skills and strategy to navigate through challenging levels, solve puzzles, and conquer formidable bosses. Will you emerge victorious and save the kingdom?</p>
+    <div
+      style={{
+        position: "absolute",
+        inset: 0,
+        backgroundColor: "#000",
+        color: "#fff",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
+      {/* Replace with <DungeonQuestWorld /> */}
+      <h2>Dungeon Quest – Gameplay Loaded</h2>
     </div>
   );
 }
