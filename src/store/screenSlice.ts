@@ -8,7 +8,7 @@ interface ScreenState {
 }
 
 const initialState: ScreenState = {
-  current: "START_MENU",
+  current: "BROWSE",
   selectedGameId: null,
 };
 

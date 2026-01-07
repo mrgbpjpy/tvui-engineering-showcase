@@ -8,8 +8,14 @@ export default function App() {
   
 
   // --- START SCREEN ---
+ // --- START MENU ---
   if (screen === "START_MENU") {
-    return <StartScreen />;
+    return (
+      <div className="app">
+        <h1>Netflix Games</h1>
+        <GameRow />
+      </div>
+    );
   }
 
   // --- GAME CONFIRM / START GAME SCREEN ---

@@ -36,9 +36,8 @@ export function GameRow() {
         <GameCard
           key={game.id}
           game={game}
-          focused={game.id === focusedGameId} onSelect={function (): void {
-            throw new Error("Function not implemented.");
-          } }        />
+          focused={game.id === focusedGameId} 
+          onSelect={() => dispatch(selectGame(game.id))}        />
       ))}
     </div>
   );
