@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import mainStart from "./assets/main_start.png";
+import startButton from "./assets/Start-Button.png"
 // import { DungeonQuestWorld } from "./DungeonQuestWorld";
 
 type GamePhase = "INTRO" | "PLAYING";
@@ -29,9 +30,30 @@ export function DungeonQuestGame() {
           backgroundRepeat: "no-repeat",
           backgroundPosition: "center",
           backgroundSize: "contain",
-          backgroundColor: "#000", // letterbox color
+          backgroundColor: "#000",
         }}
-      />
+      >
+        {/* START BUTTON */}
+        <div
+          style={{
+            position: "absolute",
+            bottom: "40%",
+            left: "50%",
+            transform: "translateX(-50%)",
+            cursor: "pointer",
+          }}
+          onClick={() => setPhase("PLAYING")}
+        >
+          <img
+            src={startButton}
+            alt="Start Game"
+            style={{
+              width: "260px",
+              imageRendering: "pixelated",
+            }}
+          />
+        </div>
+      </div>
     );
   }
 
