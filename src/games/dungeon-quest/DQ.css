@@ -2,3 +2,36 @@
   transform-origin: top left;
   scale: 2;
 }
+
+/* Disable text/image selection everywhere */
+* {
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* Disable touch callouts & highlight */
+html, body {
+  touch-action: none;
+  overscroll-behavior: none;
+}
+
+/* Game world container */
+.dq-world {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+
+  touch-action: none;           /* IMPORTANT */
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Background image */
+.dq-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  image-rendering: pixelated;
+  pointer-events: none;         /* <-- KEY LINE */
+}
