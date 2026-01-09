@@ -1,5 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { clamp } from "./utils/clamp";
+import { SOLIDS } from "./data/solids";
+import { intersects } from "./collision/aabb";
+import type { AABB } from "./collision/types";
 
 const MAX_WALK_SPEED = 220;
 const ACCELERATION = 1200;
@@ -11,33 +14,33 @@ export function usePlayerMovement(
   playerWidth: number,
   playerHeight: number
 ) {
-  const keys = useRef<Record<string, boolean>>({});
+  /* ---------------- STATE ---------------- */
+
+  const [position, setPosition] = useState({ x: 13, y: 250 });
+  const [direction, setDirection] = useState({ x: 0, y: 1 });
 
   const velocity = useRef({ x: 0, y: 0 });
 
+  /* ---------------- INPUT ---------------- */
+
+  const keys = useRef<Record<string, boolean>>({});
   const pointerActive = useRef(false);
   const pointerDir = useRef({ x: 0, y: 0 });
 
-  const [position, setPosition] = useState({ x: 600, y: 600 });
-  const [direction, setDirection] = useState({ x: 0, y: 1 });
-
-  /* ---------------- INPUT ---------------- */
-
-  // Keyboard
+  /* ---------- KEYBOARD ---------- */
   useEffect(() => {
     const down = (e: KeyboardEvent) => (keys.current[e.key] = true);
     const up = (e: KeyboardEvent) => (keys.current[e.key] = false);
 
     window.addEventListener("keydown", down);
     window.addEventListener("keyup", up);
-
     return () => {
       window.removeEventListener("keydown", down);
       window.removeEventListener("keyup", up);
     };
   }, []);
 
-  // Pointer (mouse + touch)
+  /* ---------- POINTER (MOUSE + TOUCH) ---------- */
   useEffect(() => {
     const updatePointerDir = (x: number, y: number) => {
       const cx = window.innerWidth / 2;
@@ -53,32 +56,33 @@ export function usePlayerMovement(
       }
     };
 
-    const onPointerDown = (e: PointerEvent) => {
+    const down = (e: PointerEvent) => {
       pointerActive.current = true;
       updatePointerDir(e.clientX, e.clientY);
     };
 
-    const onPointerMove = (e: PointerEvent) => {
-      if (!pointerActive.current) return;
-      updatePointerDir(e.clientX, e.clientY);
+    const move = (e: PointerEvent) => {
+      if (pointerActive.current) {
+        updatePointerDir(e.clientX, e.clientY);
+      }
     };
 
-    const onPointerUp = () => {
+    const up = () => {
       pointerActive.current = false;
       pointerDir.current.x = 0;
       pointerDir.current.y = 0;
     };
 
-    window.addEventListener("pointerdown", onPointerDown);
-    window.addEventListener("pointermove", onPointerMove);
-    window.addEventListener("pointerup", onPointerUp);
-    window.addEventListener("pointercancel", onPointerUp);
+    window.addEventListener("pointerdown", down);
+    window.addEventListener("pointermove", move);
+    window.addEventListener("pointerup", up);
+    window.addEventListener("pointercancel", up);
 
     return () => {
-      window.removeEventListener("pointerdown", onPointerDown);
-      window.removeEventListener("pointermove", onPointerMove);
-      window.removeEventListener("pointerup", onPointerUp);
-      window.removeEventListener("pointercancel", onPointerUp);
+      window.removeEventListener("pointerdown", down);
+      window.removeEventListener("pointermove", move);
+      window.removeEventListener("pointerup", up);
+      window.removeEventListener("pointercancel", up);
     };
   }, []);
 
@@ -92,17 +96,15 @@ export function usePlayerMovement(
       const dt = (now - last) / 1000;
       last = now;
 
-      // Base input (pointer has priority)
+      /* -------- INPUT VECTOR -------- */
       let ix = pointerActive.current ? pointerDir.current.x : 0;
       let iy = pointerActive.current ? pointerDir.current.y : 0;
 
-      // Keyboard adds to it
       if (keys.current["ArrowLeft"] || keys.current["a"]) ix -= 1;
       if (keys.current["ArrowRight"] || keys.current["d"]) ix += 1;
       if (keys.current["ArrowUp"] || keys.current["w"]) iy -= 1;
       if (keys.current["ArrowDown"] || keys.current["s"]) iy += 1;
 
-      // Normalize direction
       if (ix || iy) {
         const len = Math.hypot(ix, iy);
         ix /= len;
@@ -110,7 +112,7 @@ export function usePlayerMovement(
         setDirection({ x: ix, y: iy });
       }
 
-      // Acceleration / deceleration
+      /* -------- ACCELERATION -------- */
       if (ix || iy) {
         velocity.current.x += ix * ACCELERATION * dt;
         velocity.current.y += iy * ACCELERATION * dt;
@@ -127,7 +129,7 @@ export function usePlayerMovement(
         }
       }
 
-      // Clamp max speed
+      /* -------- CLAMP MAX SPEED -------- */
       const speed = Math.hypot(
         velocity.current.x,
         velocity.current.y
@@ -138,26 +140,55 @@ export function usePlayerMovement(
         velocity.current.y *= s;
       }
 
-      // Apply movement
-      setPosition((p) => ({
-        x: clamp(
-          p.x + velocity.current.x * dt,
-          0,
-          worldWidth - playerWidth
-        ),
-        y: clamp(
-          p.y + velocity.current.y * dt,
-          0,
-          worldHeight - playerHeight
-        ),
-      }));
+      /* -------- MOVE + COLLISION -------- */
+      setPosition((p) => {
+        let nextX = p.x + velocity.current.x * dt;
+        let nextY = p.y;
+
+        const boxX: AABB = {
+          x: nextX,
+          y: p.y,
+          width: playerWidth,
+          height: playerHeight,
+        };
+
+        for (const solid of SOLIDS) {
+          if (intersects(boxX, solid)) {
+            velocity.current.x = 0;
+            nextX = p.x;
+            break;
+          }
+        }
+
+        nextY = p.y + velocity.current.y * dt;
+
+        const boxY: AABB = {
+          x: nextX,
+          y: nextY,
+          width: playerWidth,
+          height: playerHeight,
+        };
+
+        for (const solid of SOLIDS) {
+          if (intersects(boxY, solid)) {
+            velocity.current.y = 0;
+            nextY = p.y;
+            break;
+          }
+        }
+
+        return {
+          x: clamp(nextX, 0, worldWidth - playerWidth),
+          y: clamp(nextY, 0, worldHeight - playerHeight),
+        };
+      });
 
       raf = requestAnimationFrame(loop);
     };
 
     raf = requestAnimationFrame(loop);
     return () => cancelAnimationFrame(raf);
-  }, []);
+  }, [worldWidth, worldHeight, playerWidth, playerHeight]);
 
   return { position, direction };
 }

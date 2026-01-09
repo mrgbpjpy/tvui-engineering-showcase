@@ -1,0 +1,1 @@
+export const DEBUG_COLLISION = 1;

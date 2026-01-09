@@ -3,6 +3,9 @@ import { Player } from "./Player";
 import { usePlayerMovement } from "./usePlayerMovement";
 import { clamp } from "./utils/clamp";
 import { useEffect, useState } from "react";
+import { SOLIDS } from "./data/solids";
+import { DEBUG_COLLISION } from "./utils/debug";
+
 
 const WORLD_WIDTH = 3000;
 const WORLD_HEIGHT = 2000;
@@ -75,6 +78,25 @@ export function DungeonQuestWorld() {
             backgroundRepeat: "repeat",
           }}
         />
+
+        {
+          DEBUG_COLLISION &&
+           SOLIDS.map((s,i)=>(
+            <div
+              key={i}
+              style={{
+                position: "absolute",
+                left: s.x,
+                top: s.y,
+                width: s.width,
+                height: s.height,
+                background: "#ff000078",
+                outline: "2px solid white",
+                pointerEvents: "none"
+              }}
+            />
+           ))
+        }
 
         {/* PLAYER */}
         <Player x={position.x} y={position.y} />
