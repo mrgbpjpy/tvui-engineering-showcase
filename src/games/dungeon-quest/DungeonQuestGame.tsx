@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import mainStart from "./assets/main_start.png";
 import startButton from "./assets/Start-Button.png";
 import introMusic from "./assets/audio/intro-theme.mp3";
-// import { DungeonQuestWorld } from "./DungeonQuestWorld";
+import { DungeonQuestWorld } from "./DungeonQuestWorld";
 
 type GamePhase = "INTRO" | "PLAYING";
 
@@ -10,38 +10,47 @@ export function DungeonQuestGame() {
   const [phase, setPhase] = useState<GamePhase>("INTRO");
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
-  useEffect(() =>{
+  const startGame = () => {
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current = null;
+    }
+    setPhase("PLAYING");
+  };
+
+  // 🎵 Intro music lifecycle (INTRO only)
+  useEffect(() => {
+    if (phase !== "INTRO") return;
+
     const audio = new Audio(introMusic);
     audio.loop = true;
-    audio.volume = 0.6;
+    audio.volume = 0.5;
+
     audio.play().catch(() => {});
     audioRef.current = audio;
 
     return () => {
-      audioRef.current?.pause();
-      audioRef.current = null;
+      audio.pause();
     };
-  },[phase]);
+  }, [phase]);
 
+  // ⌨️ Enter key to start (INTRO only)
   useEffect(() => {
+    if (phase !== "INTRO") return;
+
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Enter") {
-        setPhase("PLAYING");
+        startGame();
       }
     };
 
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, []);
-const startGame = () => {
-    if (audioRef.current) {
-      audioRef.current.volume = 0;
-      audioRef.current.pause();
-    }
-    setPhase("PLAYING");
-  };
+  }, [phase]);
 
-  // --- INTRO SCREEN ---
+  // ─────────────────────────────────────────
+  // INTRO SCREEN
+  // ─────────────────────────────────────────
   if (phase === "INTRO") {
     return (
       <div
@@ -73,14 +82,7 @@ const startGame = () => {
             style={{
               width: "260px",
               imageRendering: "pixelated",
-              transition: "transform 180ms ease, filter 180ms ease",
             }}
-            onMouseEnter={(e) =>
-              (e.currentTarget.style.transform = "scale(1.08)")
-            }
-            onMouseLeave={(e) =>
-              (e.currentTarget.style.transform = "scale(1)")
-            }
           />
         </div>
 
@@ -92,8 +94,8 @@ const startGame = () => {
             width: "100%",
             textAlign: "center",
             fontSize: "12px",
-            color: "#8b1212ff",
-            opacity: 0.75,
+            color: "#bbb",
+            opacity: 0.8,
           }}
         >
           Music by{" "}
@@ -101,17 +103,11 @@ const startGame = () => {
             href="https://pixabay.com/users/reylagstudios-36363245/"
             target="_blank"
             rel="noreferrer"
-            style={{ color: "#0743c4ff" }}
           >
             ReyLagStudios
           </a>{" "}
           from{" "}
-          <a
-            href="https://pixabay.com/"
-            target="_blank"
-            rel="noreferrer"
-            style={{ color: "#e70bc3ff" }}
-          >
+          <a href="https://pixabay.com/" target="_blank" rel="noreferrer">
             Pixabay
           </a>
         </div>
@@ -120,9 +116,9 @@ const startGame = () => {
         <style>
           {`
             @keyframes pulse {
-              0% { transform: translateX(-50%) scale(1); filter: drop-shadow(0 0 0px rgba(255,255,255,0)); }
-              50% { transform: translateX(-50%) scale(1.04); filter: drop-shadow(0 0 10px rgba(255,255,255,0.35)); }
-              100% { transform: translateX(-50%) scale(1); filter: drop-shadow(0 0 0px rgba(255,255,255,0)); }
+              0%   { transform: translateX(-50%) scale(1); }
+              50%  { transform: translateX(-50%) scale(1.05); }
+              100% { transform: translateX(-50%) scale(1); }
             }
           `}
         </style>
@@ -130,22 +126,8 @@ const startGame = () => {
     );
   }
 
-  // --- GAMEPLAY ---
-  return (
-    <div
-      style={{
-        position: "absolute",
-        inset: 0,
-        backgroundColor: "#000",
-        color: "#fff",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-      }}
-    >
-      {/* Replace with DungeonQuestWorld */}
-      <h2>Dungeon Quest – Gameplay Loaded</h2>
-    </div>
-  );
+  // ─────────────────────────────────────────
+  // GAMEPLAY
+  // ─────────────────────────────────────────
+  return <DungeonQuestWorld />;
 }
-
