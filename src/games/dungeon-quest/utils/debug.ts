@@ -1,1 +1,1 @@
-export const DEBUG_COLLISION = 1;
+export const DEBUG_COLLISION = 0;

@@ -3,10 +3,12 @@ import { clamp } from "./utils/clamp";
 import { SOLIDS } from "./data/solids";
 import { intersects } from "./collision/aabb";
 import type { AABB } from "./collision/types";
+import { TREES } from "./data/trees";
 
 const MAX_WALK_SPEED = 220;
 const ACCELERATION = 1200;
 const DECELERATION = 1400;
+const COLLIDERS = [...SOLIDS,...TREES]
 
 export function usePlayerMovement(
   worldWidth: number,
@@ -152,7 +154,7 @@ export function usePlayerMovement(
           height: playerHeight,
         };
 
-        for (const solid of SOLIDS) {
+        for (const solid of COLLIDERS) {
           if (intersects(boxX, solid)) {
             velocity.current.x = 0;
             nextX = p.x;
@@ -169,7 +171,7 @@ export function usePlayerMovement(
           height: playerHeight,
         };
 
-        for (const solid of SOLIDS) {
+        for (const solid of COLLIDERS) {
           if (intersects(boxY, solid)) {
             velocity.current.y = 0;
             nextY = p.y;

@@ -1,10 +1,12 @@
 import BG from "./assets/BG.png";
+
 import { Player } from "./Player";
 import { usePlayerMovement } from "./usePlayerMovement";
 import { clamp } from "./utils/clamp";
 import { useEffect, useState } from "react";
 import { SOLIDS } from "./data/solids";
 import { DEBUG_COLLISION } from "./utils/debug";
+import { TreesLayer } from "./TreeLayers";
 
 
 const WORLD_WIDTH = 3000;
@@ -60,6 +62,8 @@ export function DungeonQuestWorld() {
         backgroundColor: "#000",
       }}
     >
+      {/* Tree */}
+        
       {/* CAMERA / WORLD */}
       <div
         style={{
@@ -69,6 +73,7 @@ export function DungeonQuestWorld() {
           transform: `translate(-${cameraX}px, -${cameraY}px)`,
         }}
       >
+       
         {/* MAP */}
         <div
           style={{
@@ -78,6 +83,8 @@ export function DungeonQuestWorld() {
             backgroundRepeat: "repeat",
           }}
         />
+          {/* TREES */}
+          <TreesLayer />
 
         {
           DEBUG_COLLISION &&
@@ -97,10 +104,38 @@ export function DungeonQuestWorld() {
             />
            ))
         }
-
+        
+           {/* <div
+      className="Tree"
+          style={{
+            position: "absolute",
+            inset: 15,
+            backgroundImage: `url(${Tree1})`,
+            top: 194,
+            left: 1368,
+            height: 457,
+            width: 339,
+            scale: 0.6
+          }}
+        />
+        <div
+      className="Tree"
+          style={{
+            position: "absolute",
+            inset: 15,
+            backgroundImage: `url(${Tree2})`,
+            top: 480,
+            left: 1368,
+            height: 457,
+            width: 385,
+            scale: 0.6
+          }}
+        /> */}
         {/* PLAYER */}
         <Player x={position.x} y={position.y} />
+        
       </div>
+     
     </div>
   );
 }
