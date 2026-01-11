@@ -1,12 +1,13 @@
 import BG from "./assets/BG.png";
 
+import { useState, useEffect, useRef } from "react";
 import { Player } from "./Player";
 import { usePlayerMovement } from "./usePlayerMovement";
 import { clamp } from "./utils/clamp";
-import { useEffect, useState } from "react";
 import { SOLIDS } from "./data/solids";
 import { DEBUG_COLLISION } from "./utils/debug";
 import { TreesLayer } from "./TreeLayers";
+import gameMusic from "./assets/audio/game.mp3";
 
 
 const WORLD_WIDTH = 3000;
@@ -22,6 +23,27 @@ export function DungeonQuestWorld() {
     PLAYER_WIDTH,
     PLAYER_HEIGHT
   );
+
+  
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+
+  
+
+
+  useEffect(() => {
+    const audio = new Audio(gameMusic);
+    audio.loop = true;
+    audio.volume = 0.5;
+
+    audio.play().catch(() => {});
+    audioRef.current = audio;
+
+    return () => {
+      audio.pause();
+      audio.currentTime = 0;
+      audioRef.current = null;
+    };
+  }, []);
 
   const [screen, setScreen] = useState({
     width: window.innerWidth,
@@ -39,6 +61,10 @@ export function DungeonQuestWorld() {
     window.addEventListener("resize", onResize);
     return () => window.removeEventListener("resize", onResize);
   }, []);
+
+  
+       
+   
 
   // CAMERA CALCULATION
   const cameraX = clamp(
@@ -62,7 +88,7 @@ export function DungeonQuestWorld() {
         backgroundColor: "#000",
       }}
     >
-      {/* Tree */}
+    
         
       {/* CAMERA / WORLD */}
       <div

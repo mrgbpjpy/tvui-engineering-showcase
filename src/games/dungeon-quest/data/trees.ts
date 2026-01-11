@@ -8,17 +8,26 @@ export interface Tree extends AABB {
 
 export const TREES: Tree[] =[
     {
-        x: 194,
-        y: 1368,
+        x: 1644,
+        y: 768,
         width: 339,
         height: 457,
         sprite: Tree1,   
     },
     {
-        x: 480,
-        y: 1368,
-        width: 385,
-        height: 457,
-        sprite: Tree2,   
+        x: 1330,
+        y: 621,
+        width: 325,
+        height: 377,
+        sprite: Tree2,  
+         
+    },
+    {
+        x: 220,
+        y: 921,
+        width: 315,
+        height: 377,
+        sprite: Tree2,  
+         
     },
 ];
