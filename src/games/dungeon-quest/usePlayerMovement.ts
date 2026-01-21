@@ -18,7 +18,7 @@ export function usePlayerMovement(
 ) {
   /* ---------------- STATE ---------------- */
 
-  const [position, setPosition] = useState({ x: 13, y: 250 });
+  const [position, setPosition] = useState({ x: 90.4555, y: 1666.01 });
   const [direction, setDirection] = useState({ x: 0, y: 1 });
 
   const velocity = useRef({ x: 0, y: 0 });
